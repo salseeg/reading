@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   	<meta charset="utf-8" />
+	<script src="jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="https://rawgithub.com/hiddentao/google-tts/master/google-tts.min.js"></script>
+	<script>
+		function generate_word(){
+			var as = ['а', 'у', 'е', 'ы', 'о', 'э', 'я', 'и', 'ю'];
+			var bs = ['ц', 'к', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ф', 'в', 'п', 'р', 'л', 'д', 'ж', 'ч', 'с', 'м', 'т', 'б'];
+
+			var b_i = Math.floor(Math.random()* 4000) % bs.length;
+			var a_i = Math.floor(Math.random()* 4000) % as.length;
+
+			return 	bs[b_i] +  as[a_i]; // + as[a_i];
+		}
+		function generate_set(){
+			var choise = Math.floor(Math.random() * 333) % 3 ;
+			//alert(choise);
+			var words = [
+				generate_word()
+				, generate_word()
+				, generate_word()
+			];
+			return {
+				words: words
+				, right_word: words[choise]
+				, choise: choise
+			};
+		}
+
+		function on_word_click(){
+			var word = $(this).html();
+			if (word == window.right_word){
+				$(this).addClass('correct');
+				setTimeout(start, 1000);
+			}else{
+				$(this).addClass('wrong');
+			}
+
+		}
+
+		function start(){
+			var s = generate_set();
+			tts.play(s.right_word);
+			window.right_word = s.right_word;
+			$('.word').removeClass('wrong correct');
+			$('#left').html(s.words[0]);
+			$('#center').html(s.words[1]);
+			$('#right').html(s.words[2]);
+		}
+
+		$(function(){
+			window.tts = new GoogleTTS('ru');
+			$('.word').click(on_word_click);
+			start();
+					//alert( s.words );
+		});
+	</script>
+	<style>
+		#field {
+			margin-top: 200px;
+			min-height: 400px;
+			width: 99%;
+		}
+		.word{
+			padding: 50px;
+			float:left;
+			width: 20%;
+			border: 1px solid gray;
+			font-size: 500%;
+			font-weight: bold;
+			font-family: sans-serif;
+			margin: 30px;
+			text-align: center;
+		}
+		.word:hover {
+			background-color: #eee;
+		}
+		.wrong, .wrong:hover {
+			background-color: #c00;
+		}
+		.correct, .correct:hover {
+			background-color: #4f4;
+		}
+	</style>
+</head>
+<body>
+
+	<div id=field>
+		<div id=left   class=word></div>
+		<div id=center class=word></div>
+		<div id=right  class=word></div>
+
+	</div>
+</body>
+
+
+</html>
+
